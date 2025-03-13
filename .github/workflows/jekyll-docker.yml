@@ -1,4 +1,4 @@
-name: Deploy Deno Site
+name: Deploy to Deno Deploy
 on:
   push:
     branches:
@@ -11,18 +11,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Deploy to Deno Site
-        uses: appleboy/scp-action@v2.14.0  # 明确版本号
+      - name: Deploy to Deno Deploy
+        uses: denoland/deployctl@1.13.1
         env:
-          SSH_PRIVATE_KEY: ${{ secrets.DENO_SITE_SSH_KEY }}
+          DENO_DEPLOY_TOKEN: ${{ secrets.DENO_DEPLOY_API_TOKEN }}
         with:
-          host: 30v0d.deno.dev
-          port: 22
-          username: b9348
-          path: /your/deploy/path  # 替换为实际路径
-          recursive: true
-          args: "-o StrictHostKeyChecking=no"
-
-      - name: 确保文件路径正确
-        run: cp index.html ./public/index.html
-        working-directory: ${{ github.workspace }}
+          project: your-deno-project-name  # 替换为实际项目名称
+          entrypoint: index.html
+          root: .
