@@ -1,0 +1,28 @@
+name: Deploy Deno Site
+on:
+  push:
+    branches:
+      - main  # 当主分支有推送时触发部署
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to Deno Site
+        uses: appleboy/scp-action@v1.1.2
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.DENO_SITE_SSH_KEY }}
+        with:
+          host: your-deno-server.com  # 目标服务器地址
+          port: 22
+          username: your-username
+          path: /var/30v0d/deno.dev/public  # 部署目标路径
+          recursive: true
+          args: "-o StrictHostKeyChecking=no"
+
+      - name: Copy index.html
+        run: cp index.html ./public  # 确保文件在正确目录
+        working-directory: .
