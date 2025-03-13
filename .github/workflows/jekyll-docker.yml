@@ -12,17 +12,17 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Deploy to Deno Site
-        uses: appleboy/scp-action@v1.1.2
+        uses: appleboy/scp-action@v2  # 更新为 v2 版本
         env:
           SSH_PRIVATE_KEY: ${{ secrets.DENO_SITE_SSH_KEY }}
         with:
-          host: 30v0d.deno.dev  # 固定目标服务器地址
+          host: 30v0d.deno.dev
           port: 22
-          username: b9348       # 已替换为提供的用户名
-          path: /path/to/your/deno-deploy-folder  # 必须替换为实际部署路径（如：/home/b9348/public_html）
+          username: b9348
+          path: /your/deploy/path  # 替换为实际路径
           recursive: true
           args: "-o StrictHostKeyChecking=no"
 
       - name: 确保文件路径正确
-        run: cp index.html ./public/index.html  # 确保文件在正确目录
+        run: cp index.html ./public/index.html
         working-directory: ${{ github.workspace }}
