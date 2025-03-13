@@ -2,7 +2,7 @@ name: Deploy Deno Site
 on:
   push:
     branches:
-      - main  # 当主分支有推送时触发部署
+      - main
 
 jobs:
   deploy:
@@ -16,13 +16,13 @@ jobs:
         env:
           SSH_PRIVATE_KEY: ${{ secrets.DENO_SITE_SSH_KEY }}
         with:
-          host: your-deno-server.com  # 目标服务器地址
+          host: 30v0d.deno.dev  # 固定目标服务器地址
           port: 22
-          username: your-username
-          path: /var/30v0d/deno.dev/public  # 部署目标路径
+          username: b9348       # 已替换为提供的用户名
+          path: /path/to/your/deno-deploy-folder  # 必须替换为实际部署路径（如：/home/b9348/public_html）
           recursive: true
           args: "-o StrictHostKeyChecking=no"
 
-      - name: Copy index.html
-        run: cp index.html ./public  # 确保文件在正确目录
-        working-directory: .
+      - name: 确保文件路径正确
+        run: cp index.html ./public/index.html  # 确保文件在正确目录
+        working-directory: ${{ github.workspace }}
