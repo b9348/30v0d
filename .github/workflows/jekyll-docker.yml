@@ -12,7 +12,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Deploy to Deno Site
-        uses: appleboy/scp-action@v2  # 更新为 v2 版本
+        uses: appleboy/scp-action@v2.14.0  # 明确版本号
         env:
           SSH_PRIVATE_KEY: ${{ secrets.DENO_SITE_SSH_KEY }}
         with:
