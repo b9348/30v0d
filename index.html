@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>乡野数字游 - 乡村文旅平台</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --main-green: #3CB371;
+            --clay-orange: #CC5500;
+            --deep-brown: #654321;
+            --light-beige: #F5F5DC;
+            --white: #FFFFFF;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            color: var(--deep-brown);
+            line-height: 1.6;
+        }
+        
+        h1, h2, h3, h4 {
+            font-family: 'Noto Serif SC', serif;
+            color: var(--deep-brown);
+        }
+        
+        /* 导航栏样式 */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .logo span {
+            margin-left: 10px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .nav-link {
+            padding: 8px 15px;
+            border-radius: 20px;
+            text-decoration: none;
+            color: var(--deep-brown);
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            background-color: var(--main-green);
+            color: white;
+        }
+        
+        /* 首屏区域 */
+        .hero {
+            height: 100vh;
+            background-image: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            position: relative;
+        }
+        
+        .hero-content {
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 800px;
+        }
+        
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: white;
+        }
+        
+        .hero p {
+            font-size: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .scroll-down {
+            position: absolute;
+            bottom: 30px;
+            font-size: 24px;
+            animation: bounce 2s infinite;
+            cursor: pointer;
+        }
+        
+        .virtual-guide {
+            position: absolute;
+            right: 30px;
+            bottom: 30px;
+            font-size: 30px;
+            background-color: var(--clay-orange);
+            padding: 15px;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-20px);
+            }
+            60% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        /* 内容区域通用样式 */
+        .section {
+            padding: 80px 30px;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+            font-size: 36px;
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background-color: var(--main-green);
+        }
+        
+        /* 地图导航模块 */
+        .map-section {
+            background-color: var(--light-beige);
+        }
+        
+        .map-container {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .map-search {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            background-color: white;
+            padding: 10px 15px;
+            border-radius: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+        
+        .map-search input {
+            border: none;
+            outline: none;
+            padding: 5px 10px;
+            font-size: 16px;
+            width: 250px;
+        }
+        
+        .map-image {
+            width: 100%;
+            height: 600px;
+            object-fit: cover;
+        }
+        
+        .map-marker {
+            position: absolute;
+            font-size: 30px;
+            cursor: pointer;
+            filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.3));
+        }
+        
+        .marker-village {
+            top: 40%;
+            left: 30%;
+        }
+        
+        .marker-tea {
+            top: 50%;
+            left: 60%;
+        }
+        
+        .marker-homestay {
+            top: 65%;
+            left: 45%;
+        }
+        
+        .location-btn {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background-color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+        }
+        
+        /* 购票系统 */
+        .ticket-section {
+            background-color: white;
+        }
+        
+        .ticket-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .ticket-card {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .ticket-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .ticket-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .ticket-info {
+            padding: 20px;
+        }
+        
+        .ticket-title {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .ticket-price {
+            font-size: 24px;
+            color: var(--clay-orange);
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .ticket-countdown {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: #777;
+        }
+        
+        .ticket-countdown span {
+            margin-left: 5px;
+        }
+        
+        .book-btn {
+            background-color: var(--main-green);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+        
+        .book-btn:hover {
+            background-color: #2a9959;
+        }
+        
+        /* 3D展示区 */
+        .3d-section {
+            background-color: var(--light-beige);
+        }
+        
+        .3d-container {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .3d-image {
+            width: 100%;
+            height: 600px;
+            object-fit: cover;
+        }
+        
+        .control-panel {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 10px 20px;
+            border-radius: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .control-btn {
+            background-color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease;
+        }
+        
+        .control-btn:hover {
+            background-color: var(--main-green);
+            color: white;
+        }
+        
+        .device-switch {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .device-btn {
+            font-size: 20px;
+            cursor: pointer;
+            opacity: 0.5;
+            transition: opacity 0.3s ease;
+        }
+        
+        .device-btn.active {
+            opacity: 1;
+        }
+        
+        /* 页脚 */
+        footer {
+            background-color: var(--deep-brown);
+            color: white;
+            padding: 50px 30px;
+            text-align: center;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .contact-info {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+        }
+        
+        .contact-item span {
+            margin-left: 10px;
+        }
+        
+        .copyright {
+            margin-top: 20px;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 15px;
+                flex-direction: column;
+            }
+            
+            .logo {
+                margin-bottom: 15px;
+            }
+            
+            .nav-links {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .hero h1 {
+                font-size: 36px;
+            }
+            
+            .hero p {
+                font-size: 16px;
+            }
+            
+            .section {
+                padding: 60px 15px;
+            }
+            
+            .map-image, .3d-image {
+                height: 400px;
+            }
+            
+            .map-search input {
+                width: 150px;
+            }
+            
+            .contact-info {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="logo">
+            <span>🌾 乡野数字游</span>
+        </div>
+        <div class="nav-links">
+            <a href="#map" class="nav-link">地图🗺️</a>
+            <a href="#tickets" class="nav-link">购票🎫</a>
+            <a href="#3d" class="nav-link">3D展馆🖼️</a>
+        </div>
+    </nav>
+    
+    <!-- 首屏区域 -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>探索乡村数字文旅新体验</h1>
+            <p>沉浸式体验传统乡村文化，感受数字科技与自然之美的完美融合</p>
+        </div>
+        <div class="scroll-down">⬇️</div>
+        <div class="virtual-guide">👩‍💻</div>
+    </section>
+    
+    <!-- 地图导航模块 -->
+    <section id="map" class="section map-section">
+        <h2 class="section-title">文旅地图导航</h2>
+        <div class="map-container">
+            <div class="map-search">
+                <span>🔍</span>
+                <input type="text" placeholder="搜索景点、民宿、活动...">
+            </div>
+            <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b" alt="乡村地图" class="map-image">
+            <div class="map-marker marker-village">🏯</div>
+            <div class="map-marker marker-tea">🌿</div>
+            <div class="map-marker marker-homestay">🏡</div>
+            <div class="location-btn">📍</div>
+        </div>
+    </section>
+    
+    <!-- 分隔线 -->
+    <hr style="max-width: 80%; margin: 0 auto; border-color: var(--main-green); opacity: 0.3;">
+    
+    <!-- 购票系统 -->
+    <section id="tickets" class="section ticket-section">
+        <h2 class="section-title">在线购票系统</h2>
+        <div class="ticket-container">
+            <!-- 票卡1 -->
+            <div class="ticket-card">
+                <img src="https://img2.baidu.com/it/u=1549990697,3956796839&fm=253&fmt=auto&app=138&f=JPEG?w=778&h=500" alt="古村落门票" class="ticket-image">
+                <div class="ticket-info">
+                    <h3 class="ticket-title">古村落文化体验</h3>
+                    <p class="ticket-price">💵 ¥88</p>
+                    <div class="ticket-countdown">
+                        <span>⏳</span>
+                        <span>限时优惠剩余: 2天3小时</span>
+                    </div>
+                    <button class="book-btn">立即预订</button>
+                </div>
+            </div>
+            
+            <!-- 票卡2 -->
+            <div class="ticket-card">
+                <img src="https://img1.baidu.com/it/u=1494163501,3385442683&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=500" alt="茶园体验" class="ticket-image">
+                <div class="ticket-info">
+                    <h3 class="ticket-title">茶园采摘体验</h3>
+                    <p class="ticket-price">💵 ¥128</p>
+                    <div class="ticket-countdown">
+                        <span>⏳</span>
+                        <span>限时优惠剩余: 5天12小时</span>
+                    </div>
+                    <button class="book-btn">立即预订</button>
+                </div>
+            </div>
+            
+            <!-- 票卡3 -->
+            <div class="ticket-card">
+                <img src="https://img0.baidu.com/it/u=1922067560,429711794&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800" alt="民宿住宿" class="ticket-image">
+                <div class="ticket-info">
+                    <h3 class="ticket-title">特色民宿住宿</h3>
+                    <p class="ticket-price">💵 ¥368/晚</p>
+                    <div class="ticket-countdown">
+                        <span>⏳</span>
+                        <span>周末仅剩3间</span>
+                    </div>
+                    <button class="book-btn">立即预订</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 分隔线 -->
+    <hr style="max-width: 80%; margin: 0 auto; border-color: var(--main-green); opacity: 0.3;">
+    
+    <!-- 3D展示区 -->
+    <section id="3d" class="section 3d-section">
+        <h2 class="section-title">数字孪生3D演示</h2>
+        <div class="3d-container">
+            <img src="https://t7.baidu.com/it/u=1732966997,2981886582&fm=193&f=GIF" alt="3D乡村模型" class="3d-image">
+            <div class="control-panel">
+                <button class="control-btn">🔃</button>
+                <button class="control-btn">🌐</button>
+                <button class="control-btn">➕</button>
+                <button class="control-btn">➖</button>
+            </div>
+            <div class="device-switch">
+                <div class="device-btn active">💻</div>
+                <div class="device-btn">📱</div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 页脚 -->
+    <footer>
+        <div class="footer-content">
+            <div class="contact-info">
+                <div class="contact-item">
+                    <span>📞</span>
+                    <span>400-123-4567</span>
+                </div>
+                <div class="contact-item">
+                    <span>📧</span>
+                    <span>contact@xiangye.com</span>
+                </div>
+                <div class="contact-item">
+                    <span>📍</span>
+                    <span>中国·美丽乡村示范区</span>
+                </div>
+            </div>
+            <div class="copyright">©️2024 虚拟乡村文旅平台 版权所有</div>
+        </div>
+    </footer>
+</body>
+</html>
